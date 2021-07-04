@@ -1,0 +1,2 @@
+rootProject.name = "CepConsulta"
+include ':app'
