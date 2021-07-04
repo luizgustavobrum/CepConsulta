@@ -1,4 +1,4 @@
-package com.app.cepconsulta
+package com.app.cepconsulta.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.app.cepconsulta.R
 import com.app.cepconsulta.data.CepService.cepServiceInterfaceImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
