@@ -2,16 +2,18 @@ package com.app.cepconsulta.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import com.app.cepconsulta.R
+import com.app.cepconsulta.databinding.ActivityMainBinding
 import com.app.cepconsulta.repository.CepRepositoryImpl
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityMainBinding
+
     private val mainViewModel: MainViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -22,10 +24,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val btnVerificar = findViewById<Button>(R.id.btn_verificar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        btnVerificar.setOnClickListener {
+        binding.btnVerificar.setOnClickListener {
             mainViewModel.getCepInformation("22745056")
         }
 
