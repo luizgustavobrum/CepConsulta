@@ -2,48 +2,48 @@ package com.app.cepconsulta.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import com.app.cepconsulta.R
-import com.app.cepconsulta.data.CepService.cepServiceInterfaceImpl
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.Exception
+import com.app.cepconsulta.repository.CepRepositoryImpl
 
 class MainActivity : AppCompatActivity() {
 
-    val TAG = MainActivity::class.java.simpleName
+    private val TAG = MainActivity::class.java.simpleName
+    private val mainViewModel: MainViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return MainViewModel(CepRepositoryImpl()) as T
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         val btnVerificar = findViewById<Button>(R.id.btn_verificar)
+
         btnVerificar.setOnClickListener {
-            lifecycleScope.launch {
-                try {
-                    val response = withContext(Dispatchers.IO) {
-                        cepServiceInterfaceImpl.cepInformation("22745056")
-                    }
+            mainViewModel.getCepInformation("22745056")
+        }
 
-                    if (response.isSuccessful && response.body() != null) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            response.body().toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Log.e(TAG, "Response null")
-                    }
-
-                } catch (e: Exception) {
-                    Log.e(TAG, e.toString())
+        mainViewModel.uiCepState.asLiveData().observe(this, { cepState ->
+            when (cepState) {
+                is UiCepState.Success -> {
+                    Toast.makeText(this, cepState.success.toString(), Toast.LENGTH_SHORT).show()
+                }
+                is UiCepState.Error -> {
+                    Toast.makeText(this, cepState.error, Toast.LENGTH_SHORT).show()
+                }
+                is UiCepState.Loading -> {
 
                 }
+                is UiCepState.Inital -> Unit
             }
-        }
+        })
     }
 }
