@@ -12,8 +12,6 @@ import com.app.cepconsulta.R
 import com.app.cepconsulta.repository.CepRepositoryImpl
 
 class MainActivity : AppCompatActivity() {
-
-    private val TAG = MainActivity::class.java.simpleName
     private val mainViewModel: MainViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
