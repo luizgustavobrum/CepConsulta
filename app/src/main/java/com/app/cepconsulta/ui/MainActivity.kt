@@ -28,7 +28,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnVerificar.setOnClickListener {
-            mainViewModel.getCepInformation("22745056")
+            val cepText = binding.EdtCep.text.toString()
+            mainViewModel.getCepInformation(cepText)
         }
 
         mainViewModel.uiCepState.asLiveData().observe(this, { cepState ->
