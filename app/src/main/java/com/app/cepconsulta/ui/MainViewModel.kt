@@ -15,15 +15,21 @@ class MainViewModel(
     private val _uiCepState = MutableStateFlow<UiCepState>(UiCepState.Inital)
     val uiCepState: StateFlow<UiCepState> get() = _uiCepState
 
-    fun getCepInformation(cep: String) = viewModelScope.launch {
+    fun getCepInformation(cep: String) {
         _uiCepState.value = UiCepState.Loading
-        val response = repository.getCep(cep)
-        when (response) {
-            is Result.Success -> {
-                _uiCepState.value = UiCepState.Success(success = response.value)
-            }
-            is Result.Error -> {
-                _uiCepState.value = UiCepState.Error(error = response.value)
+        if (cep.length < 8) {
+            _uiCepState.value = UiCepState.Error(error = "O número é menor de 8")
+        } else {
+            viewModelScope.launch {
+                val response = repository.getCep(cep)
+                when (response) {
+                    is Result.Success -> {
+                        _uiCepState.value = UiCepState.Success(success = response.value)
+                    }
+                    is Result.Error -> {
+                        _uiCepState.value = UiCepState.Error(error = response.value)
+                    }
+                }
             }
         }
     }
